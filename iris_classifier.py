@@ -13,15 +13,26 @@ def load_iris():
 
 iris = load_iris()
 
-train, test = train_test_split(iris, test_size=0.2)
+def accuracy_test(x, y):
+    tot = 0
+    for i, p in enumerate(x):
+        if p == y.iloc[i]: tot+=1
 
-knn_classifier = neighbors.KNeighborsClassifier(n_neighbors=5)
-knn_classifier.fit(train.drop('variety' , axis=1), train['variety'])
+    return tot/len(x)
 
-predictions = knn_classifier.predict(test.drop('variety', axis=1))
+def test_k(data, k):
+    train, test = train_test_split(data, test_size=0.2)
+    knn_classifier = neighbors.KNeighborsClassifier(n_neighbors=5)
+    knn_classifier.fit(train.drop('variety' , axis=1), train['variety'])
 
-for i, prediction in enumerate(predictions):
-    print(f"{prediction}:{train.iloc[i]['variety']}")
+    predictions = knn_classifier.predict(test.drop('variety', axis=1))
+    return accuracy_test(predictions, train['variety'])
 
-sns.relplot(data=iris, x='sepal_length', y='sepal_width', hue='variety')
+ks = []
+for k in range(1, 50):
+    ks.append(test_k(iris, k))
+
+plt.plot(ks)
+#sns.relplot(data=iris, x='sepal_length', y='sepal_width', hue='variety')
+
 plt.show()
