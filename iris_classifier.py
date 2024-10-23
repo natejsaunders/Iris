@@ -6,8 +6,6 @@ import seaborn as sns
 from sklearn import neighbors
 from sklearn.model_selection import train_test_split
 
-import random
-
 def load_iris():
     return pd.read_csv("iris.csv")
 
